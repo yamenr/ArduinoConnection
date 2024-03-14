@@ -23,19 +23,18 @@ import java.util.Set;
 public class SelectDeviceActivity extends AppCompatActivity {
 
 
-    private final int REQUEST_PERMISSION_CONNECT_BLUETOOTH=1;
+    private final int REQUEST_PERMISSION_CONNECT_BLUETOOTH = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_device);
-
         // Bluetooth Setup
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
 
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_PERMISSION_CONNECT_BLUETOOTH);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_PERMISSION_CONNECT_BLUETOOTH);
         }
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         List<Object> deviceList = new ArrayList<>();

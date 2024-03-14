@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     public static BluetoothSocket mmSocket;
     public static ConnectedThread connectedThread;
     public static CreateConnectThread createConnectThread;
-
     private final static int CONNECTING_STATUS = 1; // used in bluetooth handler to identify message status
     private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
 
@@ -133,17 +133,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String cmdText = null;
+                cmdText = "";
                 String btnState = buttonToggle.getText().toString().toLowerCase();
                 switch (btnState) {
                     case "turn on":
-                        buttonToggle.setText("Turn Off");
+                        buttonToggle.setText("TURN OFF");
                         // Command to turn on LED on Arduino. Must match with the command in Arduino code
-                        cmdText = "<turn on>";
+                        cmdText = "O"; // <turn on>
                         break;
                     case "turn off":
-                        buttonToggle.setText("Turn On");
+                        buttonToggle.setText("TURN ON");
                         // Command to turn off LED on Arduino. Must match with the command in Arduino code
-                        cmdText = "<turn off>";
+                        cmdText = "F"; // <turn off>
                         break;
                 }
                 // Send command to Arduino board
@@ -197,17 +198,12 @@ public class MainActivity extends AppCompatActivity {
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             Utils u = Utils.getInstance();
 
-            if (ActivityCompat.checkSelfPermission(u.getMainAct(), android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
+            if (ActivityCompat.checkSelfPermission(u.getMainAct(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+
+                int REQUEST_PERMISSION_CONNECT_BLUETOOTH = 1;
+                ActivityCompat.requestPermissions(u.getMainAct(), new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_PERMISSION_CONNECT_BLUETOOTH);
             }
-            bluetoothAdapter.cancelDiscovery();
+            //bluetoothAdapter.cancelDiscovery();
             try {
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
